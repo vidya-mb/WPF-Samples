@@ -31,9 +31,18 @@ namespace ControlsAndLayout
         {
             try
             {
+                var str = TextBox1.Text;
+                // Guard: don't try to parse empty or whitespace-only text.
+                if (string.IsNullOrWhiteSpace(str))
+                {
+                    // Clear preview area and reset error state.
+                    cc.Children.Clear();
+                    TextBox1.Foreground = Brushes.Black;
+                    ErrorText.Text = "";
+                    return;
+                }
                 var ms = new MemoryStream();
                 var sw = new StreamWriter(ms);
-                var str = TextBox1.Text;
                 sw.Write(str);
                 sw.Flush();
                 ms.Flush();
@@ -84,6 +93,23 @@ namespace ControlsAndLayout
         {
             PreviewRow.Height = new GridLength(1, GridUnitType.Star);
             CodeRow.Height = new GridLength(1, GridUnitType.Star);
+        }
+        //to clear the selection when the expander is expanded
+        private void Expander_Expanded(object sender, RoutedEventArgs e)
+        {
+            LayoutListBox.Focus();
+            ControlListBox.Focus();
+            // Clear current selection  
+            try
+            {
+                // clear any existing selection 
+                LayoutListBox.SelectedIndex = -1;
+                ControlListBox.SelectedIndex = -1;
+            }
+            catch
+            {
+                // ignore exceptions in UI event (optional: log)
+            }
         }
     }
 }
