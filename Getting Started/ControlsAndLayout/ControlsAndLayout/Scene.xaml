@@ -78,7 +78,7 @@
                                 <Expander.Header>
                                     <TextBlock Margin="10,0,0,0"  FontFamily="Calibri" FontWeight="bold"  TextTrimming="WordEllipsis">Controls</TextBlock>
                                 </Expander.Header>
-                                <ListBox MaxHeight="300"  DataContext="{Binding Source={StaticResource SamplesList}, XPath=/Samples/Category[2]/Sample}" ItemsSource="{Binding}" SelectionChanged="HandleSelectionChanged" Style="{DynamicResource SamplesListBox}"  IsSynchronizedWithCurrentItem="True" SelectedValue="X" />
+                                <ListBox Name="ControlsListBox" MaxHeight="300"  DataContext="{Binding Source={StaticResource SamplesList}, XPath=/Samples/Category[2]/Sample}" ItemsSource="{Binding}" SelectionChanged="HandleSelectionChanged" Style="{DynamicResource SamplesListBox}"  IsSynchronizedWithCurrentItem="True" SelectedValue="X" />
                             </Expander>
                         </DockPanel>
                     </Grid>

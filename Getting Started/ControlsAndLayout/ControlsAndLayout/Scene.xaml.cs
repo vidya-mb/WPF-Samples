@@ -13,15 +13,41 @@ namespace ControlsAndLayout
     public partial class Scene
     {
         public bool RealTimeUpdate = true;
-
+        private bool _suppressSelectionHandling;
         private void HandleSelectionChanged(object sender, SelectionChangedEventArgs args)
         {
-            if (sender == null)
-                return;
-
-            Details.DataContext = (sender as ListBox).DataContext;
+            if (_suppressSelectionHandling) return;
+            try
+            {
+                _suppressSelectionHandling = true;
+                if (sender == null)
+                    return;
+                var lb = sender as ListBox;
+                if (lb == null)
+                    return;
+                // Use the selected item as the Details DataContext so bindings like XPath=@Title
+                // resolve against the selected sample node. This also avoids showing the whole
+                // collection as the details context.
+                if (lb.SelectedItem != null)
+                    Details.DataContext = lb.SelectedItem;
+                // Clear selection in the other ListBox so only the current expander's selection remains.
+                if (lb == LayoutListBox)
+                {
+                    if (ControlsListBox != null && ControlsListBox.SelectedIndex != -1)
+                    {
+                        ControlsListBox.SelectedIndex = -1;
+                    }
+                }
+                else if (lb == ControlsListBox)
+                {
+                    if (LayoutListBox != null && LayoutListBox.SelectedIndex != -1)
+                    {
+                        LayoutListBox.SelectedIndex = -1;
+                    }
+                }
+            }
+            finally { _suppressSelectionHandling = false; }
         }
-
         protected void HandleTextChanged(object sender, TextChangedEventArgs me)
         {
             if (RealTimeUpdate) ParseCurrentBuffer();
